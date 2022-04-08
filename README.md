@@ -30,10 +30,13 @@ There are two data sources, google mobility and ANAC data. The google mobility c
 (more details on data transformation folder)
 
 ## Section 2 - How to run
-Folder 'Data' contains the raw data except for google mobility which was too large, and the meta data (description).
-Folder 'Transformed data' contains the data ready to create the vizualiations and the geo matching files.
-Folder 'ETL' contains the metadata as well, the code for reading and concatening the data and the code to run the geo matching airports and cities. 
-Folder 'Data transformation' contains the code with the parsers and the metrics for cities and airports, and the detailed description step by step. 
+- Folder 'Data' contains the raw data except for google mobility which was too large, and the meta data (description).
+- Folder 'Transformed data' contains the data ready to create the vizualiations and the geo matching files.
+- Folder 'ETL' contains the metadata as well, the code for reading and concatening the data and the code to run the geo matching airports and cities. 
+- Folder 'Data transformation' contains the code with the parsers and the metrics for cities and airports, and the detailed description step by step. 
+
+# Link to dashboard
+https://observablehq.com/d/e3e69813254721e0 
 
 
 
