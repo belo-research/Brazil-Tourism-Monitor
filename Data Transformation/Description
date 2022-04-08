@@ -1,0 +1,81 @@
+#Google Mobility Data 
+
+Step 0 - ETL 
+
+0.1 Download ‘CSVs por região’ from Google Mobility Covid 19 report,  search for ‘BR 19/20/21’
+ https://www.google.com/covid19/mobility/
+Output: Raw data
+
+Step 1 - Geo matching cities
+
+1.1 Import data and concat the three excels file on ‘raw data’ folder
+1.2 Identify good locations 
+1.2.1 Get x as a string with the name of the cities
+1.2.2 Get the null values
+1.2.3 Add a columns observation value to count how many nuls with a groupby
+1.2.4 Divide by number of obs to get percent 
+1.2.5 Get only the two best columns for tourism (retail_and_recreation
+And parks), then filter where is less than 5% nans
+Output: Excel file (‘geo_matching.xlsx’)of geo-locations for cities in google-maps with good data
+1.3 Make an address for geo-matching
+1.4  Run geo_match_filt.py
+1.4.1 Using ‘mapa-turismo’ grades of top municipalities filter on cities within the a-grade and geo-match with municipalities shape file to identify associated municipalities.
+Output: ‘Geo_matching.xlsx’ excel file with the good cities latitude and longitude
+
+Step 2 - Parsing 
+
+2.1 Import data file raw_data\google_data and append it,inner merge it with ‘geo_matching_filt’
+2.2 Backfill with the two columns that matter using groupby for ‘sub_region_2’ (cities)
+2.3 Sum and divide by two to get the average as ‘metric’ 
+2.4 Create a 100 point index relative to the first value
+2.5 Created ‘metric’ column with the mean of those two columns
+
+Step 3 - Creating metrics
+
+3.1 Create 7, 14 and 28 days rolling mean using groupby(sub_region_2 and metric) 
+3.2 Calculate percent change and multiply by 100
+3.3 Create new df as map data and get the maximum values from all the values in a column (max date) 
+3.4 Create ‘scaled variable’ column (min-max scaller) to plot the negative and positive  values on the charts, by transforming features by scaling each feature to a given range (between 0 and 1)
+3.5 Join the map data and full data as table data. 
+3.6 Export transformed data for visualizations
+
+Output: two csv files ‘‘map_input_city’ and ‘table_input_city’ with filtered list of municipalities, date, address, lat, lon, original metric,metric_7,metric_28, ,metric_84, sclaed_variable.	
+
+
+# ANAC Data 
+
+Step 0 - ETL 
+
+0.1 Download ‘resumo anual 2019-2022’ from ‘Dados-Estatísticos ANAC’ https://www.gov.br/anac/pt-br/assuntos/dados-e-estatisticas/dados-estatisticos
+
+Step 1 - Geo matching airports
+
+1.1 Function to download the zip file 
+    1.1.1 Create directory if not exists
+  1.1.2 Streaming, so we can iterate over the response
+  1.1.3 Downloading the data
+  1.1.4 Unzip
+  1.1.5 Get The filename of the extracted data
+  1.1.6  Apply Transformations
+    1.1.6.1 Filter by Brazil and 2019 to get the biggest airports
+    1.1.6.2 Groupby destination airports and sum passengers, get the ones with more than 200000
+    1.1.6.3 Create addresses for those airports 
+2 Perform geomatching
+Output: ‘Geo_matching_airports.xlsx’ excel file with the biggest airports latitude and longitude
+
+Step 2 - Parsing
+
+2.1 Import data file raw_data\anac_data and append it,inner merge it with ‘geo_matching_airports’
+2.2 Repeat step 1.1.6.1  to Get only biggest airports and merge it
+2.3 Filter by Brazil, above 2018, create datetime
+2.4 Groupby ‘Date’, ‘Destination airports’ and ‘Passengers’, then sum 
+2.5 Amalgamate airports that probably serve same market
+
+Step 3 - Create Metrics
+
+3.1 Calculate percent change and multiply by 100
+3.2 3.3 Create new df as map data and get the maximum values from all the values in a column (max date) 
+3.4 Create ‘scaled variable’ column (min-max scaller) to plot the negative and positive  values on the charts, by transforming features by scaling each feature to a given range (between 0 and 1)
+3.5 Join the map data and full data as table data
+3.6 Export transformed data for creating visualizations
+Output: two csv files ‘‘map_input_airports’ and ‘table_input_airports’ with filtered list of municipalities, date, address, lat, lon, the metric you and sclaed_variable.
